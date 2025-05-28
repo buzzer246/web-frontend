@@ -1,18 +1,11 @@
 import { useForm } from 'react-hook-form';
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-
-interface Doctor {
-  id: string;
-  name: string;
-  specialization: string;
-}
+import { useState } from 'react';
 
 interface FormData {
   name: string;
   gender: string;
-  phone:number;
-  password:string;
+  phone: number;
+  password: string;
   dob: string;
   doctorToConsult: string;
   amount: number;
@@ -23,58 +16,37 @@ const PatientForm = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     reset,
   } = useForm<FormData>();
 
-  const [doctors, setDoctors] = useState<Doctor[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  // Fetch doctors list from backend
-  useEffect(() => {
-    const fetchDoctors = async () => {
-      try {
-        const response = await axios.get<Doctor[]>('http://localhost:8080/doctors');
-        setDoctors(response.data);
-        setIsLoading(false);
-      } catch (err) {
-        setError('Failed to load doctors list');
-        setIsLoading(false);
-        console.error('Error fetching doctors:', err);
-      }
-    };
-
-    fetchDoctors();
-  }, []);
-
 
   const onSubmit = async (data: FormData) => {
     try {
-
       const patientData = {
-      name: data.name,
-      gender: data.gender,
-      phone: data.phone,
-      dob: data.dob, // Ensure this is in YYYY-MM-DD format
-      password: data.password, // Optional field
-      doctortoconsult: data.doctorToConsult,
-      amount: Number(data.amount), // Convert to number
-      termsaccepted: Boolean(data.agreeToTerms) // Ensure boolean
-    };
+        name: data.name,
+        gender: data.gender,
+        phone: data.phone,
+        dob: data.dob, // Ensure this is in YYYY-MM-DD format
+        password: data.password,
+        doctortoconsult: data.doctorToConsult,
+        amount: Number(data.amount), // Convert to number
+        termsaccepted: Boolean(data.agreeToTerms) // Ensure boolean
+      };
 
-        await fetch('http://localhost:8080/savepatient', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(patientData)
-          })
-      
+      await fetch('http://localhost:8080/savepatient', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(patientData)
+      });
+
       console.log('Patient created:', data);
       alert('Patient form submitted successfully!');
       reset(); // Reset form after successful submission
     } catch (error) {
       console.error('Error submitting form:', error);
-      alert('Error submitting form. Please try again.');
+      setError('Error submitting form. Please try again.');
     }
   };
 
@@ -120,8 +92,6 @@ const PatientForm = () => {
               />
               <span className="ml-2">Male</span>
             </label>
-          </div>
-          <div className='mb-3'>
             <label className="inline-flex items-center">
               <input
                 type="radio"
@@ -132,10 +102,16 @@ const PatientForm = () => {
               <span className="ml-2">Female</span>
             </label>
           </div>
-          <div className='mb-3'>
-                {/* Phone */}
-            <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+          {errors.gender && (
+            <p className="mt-1 text-sm text-red-600">{errors.gender.message}</p>
+          )}
+        </div>
+
+        {/* Phone */}
+        <div className='mb-3'>
+          <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
             Phone*
+          </label>
           <input
             type="number"
             id="phone"
@@ -144,22 +120,27 @@ const PatientForm = () => {
               errors.phone ? 'border-red-500' : 'border'
             }`}
           />
-          </label>
+          {errors.phone && (
+            <p className="mt-1 text-sm text-red-600">{errors.phone.message}</p>
+          )}
         </div>
+
+        {/* Password*/}
         <div className='mb-3'>
-              {/* Password*/}
-           <label className="inline-flex items-center mb-3">
+          <label htmlFor="password" className="block text-sm font-medium text-gray-700">
             Password*
+          </label>
           <input
             type="password"
             id="password"
-            {...register('password', { required: 'Phone is required' })}
+            {...register('password', { required: 'Password is required' })}
             className={`mt-1 block w-full rounded-md form-control border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${
               errors.password ? 'border-red-500' : 'border'
             }`}
-            
           />
-          </label>
+          {errors.password && (
+            <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
+          )}
         </div>
 
         {/* Date of Birth */}
@@ -177,65 +158,6 @@ const PatientForm = () => {
           />
           {errors.dob && (
             <p className="mt-1 text-sm text-red-600">{errors.dob.message}</p>
-          )}
-        </div>
-
-        {/* Doctor to Consult */}
-        <div className='mb-3'>
-          <label htmlFor="doctorToConsult" className="block text-sm font-medium text-gray-700">
-            Doctor to Consult*
-          </label>
-          {isLoading ? (
-            <div className="mt-1 animate-pulse  form-control h-10 bg-gray-200 rounded-md"></div>
-          ) : (
-            <select
-              id="doctorToConsult"
-              {...register('doctorToConsult', { required: 'Doctor selection is required' })}
-              className={`mt-1 block w-full rounded-md form-control border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${
-                errors.doctorToConsult ? 'border-red-500' : 'border'
-              }`}
-              disabled={isLoading}
-            >
-              <option value="">Select a doctor</option>
-              {doctors.map((doctor) => (
-                <option key={doctor.id} value={doctor.id}>
-                  {doctor.name} ({doctor.specialization})
-                </option>
-              ))}
-            </select>
-          )}
-          {errors.doctorToConsult && (
-            <p className="mt-1 text-sm form-control text-red-600">{errors.doctorToConsult.message}</p>
-          )}
-        </div>
-
-        {/* Payment Amount */}
-        <div className='mb-3'>
-          <label htmlFor="amount" className="block text-sm font-medium text-gray-700">
-            Payment Amount (INR)*
-          </label>
-          <div className="mt-1 relative rounded-md shadow-sm">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <span className="text-gray-500 sm:text-sm">$</span>
-            </div>
-            <input
-              type="number"
-              id="amount"
-              step="0.01"
-              min="0"
-              {...register('amount', {
-                required: 'Payment amount is required',
-                min: { value: 0, message: 'Amount must be positive' },
-                valueAsNumber: true,
-              })}
-              className={`block w-full pl-7 pr-12 rounded-md form-control border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${
-                errors.amount ? 'border-red-500' : 'border'
-              }`}
-              placeholder="0.00"
-            />
-          </div>
-          {errors.amount && (
-            <p className="mt-1 text-sm text-red-600">{errors.amount.message}</p>
           )}
         </div>
 
@@ -260,15 +182,15 @@ const PatientForm = () => {
         {errors.agreeToTerms && (
           <p className="mt-1 text-sm text-red-600">{errors.agreeToTerms.message}</p>
         )}
-</div>
+
         {/* Submit Button */}
         <div className='mb-3'>
           <button
             type="submit"
             className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            disabled={isLoading}
+            disabled={isSubmitting}
           >
-            {isLoading ? 'Submitting...' : 'Submit'}
+            {isSubmitting ? 'Submitting...' : 'Submit'}
           </button>
         </div>
       </form>

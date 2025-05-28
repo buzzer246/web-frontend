@@ -50,7 +50,8 @@ const Registration = () => {
   }
   const redirect = () => {
 
-    window.location.href = "http:localhost:3000";
+    alert("Your are Back to Home Page!");
+    window.location.reload();
 
   }
 

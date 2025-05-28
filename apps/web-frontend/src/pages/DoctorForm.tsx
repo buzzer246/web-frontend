@@ -38,14 +38,9 @@ export default function DoctorDashboard() {
     fetchDoctors();
   }, []);
 
-  const Bookappointment = () =>{
-
-    console.log("You have Booked the Appointment");
-    alert("You have Booked the Appointment!");
-  }
 const Moreinfo= ()=>{
 
-  alert("Search the Doctor Appointment Availability!");
+  alert("Search the Doctor Appointment Availability and Book!");
 }
 
   return (
@@ -115,12 +110,8 @@ const Moreinfo= ()=>{
                           <span className="text-sm text-gray-600">{doctor.availability}</span>
                         </div>
                       </div>
-
                       <div className="flex justify-between mt-4">
-                        <button className="bg-blue-600 hover:bg-gray-200 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-300 flex-1 mr-2" onClick={Bookappointment}>
-                          Book Appointment
-                        </button>
-                        <button className="bg-yellow-400 hover:bg-gray-200 text-white-400 px-4 py-2 rounded-md text-sm font-medium transition-colors duration-300 flex-1 ml-2" onClick={Moreinfo}>
+                        <button className="bg-blue-400 hover:bg-gray-200 text-white-600 px-4 py-2 rounded-md text-sm font-medium transition-colors duration-300 flex-1 ml-2 text-center" onClick={Moreinfo}>
                           More Info
                         </button>
                       </div>

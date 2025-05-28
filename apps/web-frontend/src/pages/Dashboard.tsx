@@ -105,7 +105,7 @@ export default function DoctorDashboard() {
         
         <div className="lg:col-span-2">
           <div className="bg-white p-6 rounded-lg shadow-lg">
-            <h2 className="text-xl font-semibold mb-4 text-primary text-center">Doctor Appointment!</h2>
+            <h2 className="text-xl font-semibold mb-4 text-primary text-center">Doctor Appointment Details!</h2>
             {loading ? (
               <p className="text-gray-500">Loading doctors...</p>
             ) : doctors.length === 0 ? (
@@ -291,12 +291,15 @@ export default function DoctorDashboard() {
               </div>
               
               <div className="flex justify-end space-x-4">
-                <button
-                  onClick={() => setIsEditModalOpen(false)}
-                  className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
-                >
-                  Cancel
-                </button>
+                 <button
+                onClick={() => {
+                  setIsEditModalOpen(false);
+                  setEditingDoctor(null);
+                }}
+                className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+              >
+                Cancel
+              </button>
                 <button
                   onClick={() => handleUpdateDoctor(editingDoctor)}
                   className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700"

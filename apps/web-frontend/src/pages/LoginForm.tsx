@@ -31,9 +31,8 @@ export default function LoginForm({ onLoginSuccess, onLoginFailure }: LoginFormP
     await new Promise(resolve => setTimeout(resolve, 1000));
     
     // Demo authentication logic
-    const isDoctor = data.name === "AvinashReddyK" && data.password === "Creative@426800";
-    const isPatient = isDoctor || 
-                     (data.name === "Girish Kumar" && data.password === "Admin@426800");
+    const isDoctor = data.name === "Dr.AvinashReddyK" && data.password === "Creative@426800";
+    const isPatient = data.name === "G Girish Kumar" && data.password === "Admin@426800";
 
     if (isDoctor || isPatient) {
       onLoginSuccess(isDoctor);
