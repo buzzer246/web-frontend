@@ -5,9 +5,13 @@
   "scripts": {},
   "private": true,
   "dependencies": {
+    "@hookform/resolvers": "^5.0.1",
     "next": "~15.2.4",
     "react": "19.0.0",
-    "react-dom": "19.0.0"
+    "react-dom": "19.0.0",
+    "react-hook-form": "^7.56.4",
+    "react-icons": "^5.5.0",
+    "zod": "^3.25.23"
   },
   "devDependencies": {
     "@eslint/compat": "^1.1.1",
@@ -16,7 +20,7 @@
     "@next/eslint-plugin-next": "^15.2.4",
     "@nx/eslint": "21.1.1",
     "@nx/eslint-plugin": "21.1.1",
-    "@nx/jest": "21.1.1",
+    "@nx/jest": "^21.1.1",
     "@nx/js": "21.1.1",
     "@nx/next": "21.1.1",
     "@nx/workspace": "21.1.1",
