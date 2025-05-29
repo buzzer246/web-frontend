@@ -162,7 +162,7 @@ app.get("/patients", function(req, res) {
 
 app.post("/savepatient", function (req, res) {
   // 1. Validate required fields first
-  const requiredFields = ['name', 'gender', 'phone', 'dob', 'doctortoconsult', 'amount', 'termsaccepted'];
+  const requiredFields = ['name', 'gender', 'phone', 'dob','termsaccepted'];
   const missingFields = requiredFields.filter(field => !req.body[field]);
   
   if (missingFields.length > 0) {
@@ -175,16 +175,14 @@ app.post("/savepatient", function (req, res) {
   // 2. Prepare SQL with correct column names
   const sql = `
     INSERT INTO patientlist 
-    (name, gender, phone, dob, doctortoconsult, amount, termsaccepted)
-    VALUES (?, ?, ?, ?, ?, ?, ?)`;
+    (name, gender, phone, dob,termsaccepted)
+    VALUES (?, ?, ?, ?, ?)`;
   
   const values = [
     req.body.name,
     req.body.gender,
     req.body.phone,
     req.body.dob,
-    req.body.doctortoconsult,
-    req.body.amount,
     req.body.termsaccepted
   ];
 
